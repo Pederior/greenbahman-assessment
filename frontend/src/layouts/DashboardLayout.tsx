@@ -6,11 +6,12 @@ import {
   Text,
   Drawer,
   Menu,
-} from '@chakra-ui/react';
-import { FiMenu, FiUsers, FiShoppingBag, FiLogOut } from 'react-icons/fi';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../features/auth/authStore';
-import { useState } from 'react';
+} from "@chakra-ui/react";
+import { FiMenu, FiUsers, FiShoppingBag, FiLogOut } from "react-icons/fi";
+import { NavLink, useNavigate, Outlet } from 'react-router-dom';
+import { useAuthStore } from "../features/auth/authStore";
+import { useState } from "react";
+import { TfiGame } from "react-icons/tfi";
 
 interface NavLinkProps {
   to: string;
@@ -20,10 +21,7 @@ interface NavLinkProps {
 
 const NavItem = ({ to, icon, children }: NavLinkProps) => {
   return (
-    <NavLink
-      to={to}
-      style={{ textDecoration: 'none' }}
-    >
+    <NavLink to={to} style={{ textDecoration: "none" }}>
       {({ isActive }) => (
         <Flex
           align="center"
@@ -32,11 +30,11 @@ const NavItem = ({ to, icon, children }: NavLinkProps) => {
           borderRadius="lg"
           role="group"
           cursor="pointer"
-          bg={isActive ? 'blue.50' : 'transparent'}
-          color={isActive ? 'blue.600' : 'inherit'}
+          bg={isActive ? "blue.50" : "transparent"}
+          color={isActive ? "blue.600" : "inherit"}
           _hover={{
-            bg: 'blue.50',
-            color: 'blue.600',
+            bg: "blue.50",
+            color: "blue.600",
           }}
         >
           {icon && <Box mr="4">{icon}</Box>}
@@ -47,7 +45,37 @@ const NavItem = ({ to, icon, children }: NavLinkProps) => {
   );
 };
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+function SidebarContent() {
+  return (
+    <Box
+      transition="3s ease"
+      bg="white"
+      borderRightWidth="1px"
+      borderRightColor="gray.200"
+      w={{ base: "full", md: 60 }}
+      pos="fixed"
+      h="full"
+    >
+      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+        <Text fontSize="2xl" fontWeight="bold" color="blue.600">
+          داشبورد
+        </Text>
+      </Flex>
+
+      <NavItem to="/dashboard/users" icon={<FiUsers />}>
+        کاربران
+      </NavItem>
+      <NavItem to="/dashboard/products" icon={<FiShoppingBag />}>
+        محصولات
+      </NavItem>
+      <NavItem to="/games" icon={<TfiGame />}>
+        فروشگاه بازی
+      </NavItem>
+    </Box>
+  );
+}
+
+export default function DashboardLayout() {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
   const user = useAuthStore((state) => state.user);
@@ -55,16 +83,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
     <Box minH="100vh" bg="gray.100">
       {/* سایدبار موبایل */}
-      <Drawer.Root open={drawerOpen} onOpenChange={(e) => setDrawerOpen(e.open)}>
+      <Drawer.Root
+        open={drawerOpen}
+        onOpenChange={(e) => setDrawerOpen(e.open)}
+      >
         <Drawer.Trigger asChild>
           <IconButton
-            display={{ base: 'flex', md: 'none' }}
+            display={{ base: "flex", md: "none" }}
             variant="outline"
             aria-label="open menu"
           >
@@ -88,10 +119,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         bg="white"
         borderBottomWidth="1px"
         borderBottomColor="gray.200"
-        justifyContent={{ base: 'space-between', md: 'flex-end' }}
+        justifyContent={{ base: "space-between", md: "flex-end" }}
       >
         <IconButton
-          display={{ base: 'flex', md: 'none' }}
+          display={{ base: "flex", md: "none" }}
           variant="outline"
           aria-label="open menu"
           onClick={() => setDrawerOpen(true)}
@@ -99,12 +130,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <FiMenu />
         </IconButton>
 
-        <HStack gap={{ base: '0', md: '6' }}>
+        <HStack gap={{ base: "0", md: "6" }}>
           <Flex alignItems="center">
             <Menu.Root>
               <Menu.Trigger asChild>
                 <Text fontSize="sm" fontWeight="medium" cursor="pointer">
-                  {user?.username || 'کاربر'}
+                  {user?.username || "کاربر"}
                 </Text>
               </Menu.Trigger>
               <Menu.Positioner>
@@ -120,9 +151,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </HStack>
       </Flex>
 
-      {/* سایدبار دسکتاپ */}
       <Box
-        display={{ base: 'none', md: 'block' }}
+        display={{ base: "none", md: "block" }}
         pos="fixed"
         h="100%"
         w="60"
@@ -133,33 +163,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <SidebarContent />
       </Box>
 
-      {/* محتوای اصلی */}
       <Box ml={{ base: 0, md: 60 }} p="4">
-        {children}
+        <Outlet />
       </Box>
     </Box>
   );
 }
 
-function SidebarContent() {
-  return (
-    <Box
-      transition="3s ease"
-      bg="white"
-      borderRightWidth="1px"
-      borderRightColor="gray.200"
-      w={{ base: 'full', md: 60 }}
-      pos="fixed"
-      h="full"
-    >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontWeight="bold" color="blue.600">
-          داشبورد
-        </Text>
-      </Flex>
 
-      <NavItem to="/dashboard/users" icon={<FiUsers />}>کاربران</NavItem>
-      <NavItem to="/dashboard/products" icon={<FiShoppingBag />}>محصولات</NavItem>
-    </Box>
-  );
-}

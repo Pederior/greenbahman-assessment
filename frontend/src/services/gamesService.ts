@@ -12,11 +12,15 @@ const api = axios.create({
 
 export const gamesService = {
   getAll: async (params: Record<string, string>) => {
-    // Filter out empty parameters
-    const cleanParams = Object.fromEntries(
-      Object.entries(params).filter(([value]) => value !== '' && value !== undefined)
-    );
-    const response = await api.get('/games', { params: cleanParams });
+    const { genres, ...restParams } = params;
+    
+    const finalParams: Record<string, string> = { ...restParams };
+    
+    if (genres && genres.trim() !== '') {
+      finalParams.genres = genres;
+    }
+
+    const response = await api.get('/games', { params: finalParams });
     return response.data;
   },
 

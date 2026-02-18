@@ -108,7 +108,8 @@ export default function LoginPage() {
             </form>
 
             <Box textAlign="center" fontSize="sm" color="gray.500">
-              <p>برای تست: username = emilys, password = emilyspass</p>
+              <span>:برای تست</span>
+              <p> username = emilys, password = emilyspass</p>
             </Box>
           </Stack>
         </Card.Body>
