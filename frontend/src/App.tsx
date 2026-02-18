@@ -1,19 +1,21 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './features/auth/LoginPage';
-import DashboardLayout from './layouts/DashboardLayout';
-import ProtectedRoute from './components/ProtectedRoute';
-import UsersPage from './features/dashboard/UsersPage';
-import ProductsPage from './features/dashboard/ProductsPage';
-import DemoSelect from './features/ui-kit/DemoSelect';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import LoginPage from "./features/auth/LoginPage";
+import DashboardLayout from "./layouts/DashboardLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import UsersPage from "./features/dashboard/UsersPage";
+import ProductsPage from "./features/dashboard/ProductsPage";
+import DemoSelect from "./features/ui-kit/DemoSelect";
+import GamesPage from "./features/games/GamesPage";
+import GameDetailPage from "./features/games/GameDetailPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<DemoSelect />} />
-        
+
         <Route path="/login" element={<LoginPage />} />
-        
+
         <Route
           path="/dashboard"
           element={
@@ -24,7 +26,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/dashboard/users"
           element={
@@ -35,7 +37,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/dashboard/products"
           element={
@@ -46,6 +48,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/games" element={<GamesPage />} />
+        <Route path="/games/:id" element={<GameDetailPage />} />
+        
       </Routes>
     </BrowserRouter>
   );
